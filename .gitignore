@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+.vscode/
+.DS_Store
+
+# Outputs
+outputs/anomalies.csv
+outputs/plots/
+
+# Secrets
+.env
