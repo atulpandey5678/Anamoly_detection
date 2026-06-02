@@ -39,15 +39,19 @@ with st.sidebar:
     st.markdown("## ◈ AnomalyIQ")
     st.markdown("---")
     st.markdown("### ⚙️ Configuration")
+
     n_clusters = st.slider("Number of Clusters", min_value=2, max_value=10, value=5)
+    st.caption("Sorts customers into N groups by spending behavior. More clusters = smaller, more specific groups.")
+
     anomaly_pct = st.slider("Anomaly Threshold (%)", min_value=1, max_value=20, value=5)
+    st.caption(
+        f"Flags the top {anomaly_pct}% of customers who sit farthest from their group's center. "
+        f"e.g. at 5% → ~10 outliers out of 200. Lower = stricter. Higher = catches more borderline cases."
+    )
     anomaly_fraction = anomaly_pct / 100
+
     st.markdown("---")
     run = st.button("▶ Run Analysis", use_container_width=True, type="primary")
-    st.markdown("---")
-    st.markdown("**Dataset:** `shwetabh123/mall-customers`")
-    st.markdown("**Method:** K-Means + Distance Scoring")
-    st.caption("Loads via KaggleHub if local CSV is missing.")
 
 st.title("Customer Spending Anomaly Detection")
 st.markdown("Surfaces outlier customers whose income-to-spending ratio deviates significantly from their peer group.")
