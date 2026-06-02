@@ -63,7 +63,7 @@ class Settings:
             feature_cols=["Annual Income (k$)", "Spending Score (1-100)"],
             use_kagglehub=os.getenv("USE_KAGGLEHUB", "1").strip().lower() in {"1", "true", "yes", "y"},
             kaggle_dataset=os.getenv("KAGGLE_DATASET", "shwetabh123/mall-customers"),
-            kaggle_file_path=os.getenv("KAGGLE_FILE_PATH", ""),
+            kaggle_file_path=os.getenv("KAGGLE_FILE_PATH", "Mall_Customers.csv"),
             n_clusters=int(os.getenv("N_CLUSTERS", "5")),
             anomaly_fraction=float(os.getenv("ANOMALY_FRACTION", "0.05")),
             random_state=int(os.getenv("RANDOM_STATE", "42")),
