@@ -103,6 +103,9 @@ def load_and_preprocess(
             raise ValueError("KaggleHub enabled but kaggle_dataset not provided.") from e
         logger.info("Local CSV unavailable (%s). Loading via KaggleHub: %s", e, kaggle_dataset)
         df = load_dataset_with_kagglehub(kaggle_dataset, kaggle_file_path or "")
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(csv_path, index=False)
+        logger.info("Saved downloaded dataset to %s", csv_path)
 
     df = handle_missing_values(df)
     df = encode_gender(df, gender_col=gender_col)
