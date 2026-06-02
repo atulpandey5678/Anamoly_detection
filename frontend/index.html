@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anomaly Detection — Customer Spending Behavior</title>
+  <meta name="description" content="ML-powered anomaly detection for mall customer spending behavior using K-Means clustering." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">AnomalyIQ</span>
+      </div>
+      <nav class="nav-pills">
+        <span class="pill active">Dashboard</span>
+        <a href="https://github.com/atulpandey5678/Anamoly_detection" target="_blank" class="pill">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-content">
+      <span class="badge">K-Means · Distance-Based · Unsupervised ML</span>
+      <h1 class="hero-title">Customer Spending<br /><span class="gradient-text">Anomaly Detection</span></h1>
+      <p class="hero-sub">Automatically surfaces outlier customers whose income-to-spending ratio deviates significantly from their peer group.</p>
+      <button id="runBtn" class="btn-primary" onclick="runPipeline()">
+        <span id="btnText">▶ Run Analysis</span>
+        <span id="btnLoader" class="spinner hidden"></span>
+      </button>
+    </div>
+    <div class="hero-art">
+      <div class="art-ring ring1"></div>
+      <div class="art-ring ring2"></div>
+      <div class="art-ring ring3"></div>
+      <div class="art-center">◈</div>
+    </div>
+  </section>
+
+  <!-- ── Error Banner ── -->
+  <div id="errorBanner" class="error-banner hidden">
+    <span class="error-icon">⚠</span>
+    <span id="errorMsg"></span>
+  </div>
+
+  <!-- ── Results ── -->
+  <main id="results" class="results hidden">
+
+    <!-- Stats Row -->
+    <section class="stats-row">
+      <div class="stat-card" id="card-total">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total Customers</div>
+      </div>
+      <div class="stat-card accent" id="card-anomalies">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-value" id="stat-anomalies">—</div>
+        <div class="stat-label">Anomalies Found</div>
+      </div>
+      <div class="stat-card" id="card-clusters">
+        <div class="stat-icon">🔵</div>
+        <div class="stat-value" id="stat-clusters">—</div>
+        <div class="stat-label">Clusters</div>
+      </div>
+      <div class="stat-card" id="card-fraction">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value" id="stat-fraction">—</div>
+        <div class="stat-label">Anomaly Threshold</div>
+      </div>
+    </section>
+
+    <!-- Plot -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Cluster Visualization</h2>
+        <p class="section-sub">Income vs Spending Score — colored by cluster, anomalies in red</p>
+      </div>
+      <div class="plot-card">
+        <img id="plotImg" src="" alt="Cluster scatter plot" class="plot-img" />
+      </div>
+    </section>
+
+    <!-- Cluster Breakdown -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Cluster Breakdown</h2>
+        <p class="section-sub">Number of customers per cluster</p>
+      </div>
+      <div id="clusterBars" class="cluster-bars"></div>
+    </section>
+
+    <!-- Anomalies Table -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">Flagged Anomalies</h2>
+        <p class="section-sub">Top customers sorted by distance from cluster centroid</p>
+      </div>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Customer ID</th>
+              <th>Income (k$)</th>
+              <th>Spending Score</th>
+              <th>Distance</th>
+              <th>Cluster</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="anomalyBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <p>Built with <strong>FastAPI</strong> + <strong>scikit-learn</strong> · K-Means Clustering · Distance-Based Anomaly Scoring</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

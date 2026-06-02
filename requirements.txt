@@ -5,6 +5,5 @@ matplotlib
 seaborn
 python-dotenv
 openai
-fastapi
-uvicorn
+streamlit
 kagglehub[pandas-datasets]

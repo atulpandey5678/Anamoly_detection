@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 
@@ -10,26 +8,10 @@ from src.anomaly import detect_anomalies
 from src.config import Settings
 from src.model import fit_kmeans
 from src.preprocessing import load_and_preprocess
-from src.utils import ensure_dirs, save_anomalies_csv
-from src.utils import save_cluster_anomaly_plot
-from src.utils import setup_logging
-from src.utils import try_generate_insights
+from src.utils import ensure_dirs, save_anomalies_csv, save_cluster_anomaly_plot, setup_logging, try_generate_insights
 
 
 def run_pipeline(settings: Settings) -> pd.DataFrame:
-    """
-    Run the end-to-end anomaly detection pipeline.
-
-    Steps:
-    - Load and preprocess input data
-    - Fit KMeans clustering model
-    - Detect anomalies as top-N percentile farthest points to centroid
-    - Persist anomalies CSV and plots
-    - Optionally generate LLM insights (skips if no key present)
-
-    Returns:
-        DataFrame of anomaly results containing both anomalous and non-anomalous rows.
-    """
     ensure_dirs([settings.data_dir, settings.outputs_dir, settings.plots_dir])
 
     raw_df, features_scaled, feature_cols = load_and_preprocess(
@@ -60,9 +42,7 @@ def run_pipeline(settings: Settings) -> pd.DataFrame:
         anomaly_fraction=settings.anomaly_fraction,
     )
 
-    anomalies_only = results_df[results_df["Is_Anomaly"]].copy()
-    save_anomalies_csv(anomalies_only, settings.anomalies_csv_path)
-
+    save_anomalies_csv(results_df[results_df["Is_Anomaly"]].copy(), settings.anomalies_csv_path)
     save_cluster_anomaly_plot(
         raw_df=raw_df,
         feature_cols=feature_cols,
@@ -71,13 +51,7 @@ def run_pipeline(settings: Settings) -> pd.DataFrame:
         plot_path=settings.plots_dir / "clusters_anomalies.png",
         title="Customer Spending Behavior: Clusters & Anomalies",
     )
-
-    try_generate_insights(
-        results_df=results_df,
-        settings=settings,
-        output_path=settings.outputs_dir / "insights.txt",
-    )
-
+    try_generate_insights(results_df=results_df, settings=settings, output_path=settings.outputs_dir / "insights.txt")
     return results_df
 
 
@@ -86,28 +60,22 @@ def main() -> None:
     setup_logging(settings.log_level)
     logger = logging.getLogger(__name__)
 
-    logger.info("Starting pipeline")
-    logger.info("Data path: %s", settings.data_csv_path)
-    logger.info("Outputs dir: %s", settings.outputs_dir)
-    logger.info("Clusters: %d | anomaly_fraction: %.3f", settings.n_clusters, settings.anomaly_fraction)
+    logger.info("Starting pipeline — data: %s | clusters: %d | anomaly_fraction: %.3f",
+                settings.data_csv_path, settings.n_clusters, settings.anomaly_fraction)
 
     try:
         results_df = run_pipeline(settings)
     except FileNotFoundError as e:
-        logger.error("%s", e)
-        logger.error(
-            "Expected Kaggle dataset CSV at: %s (place Mall_Customers.csv in ./data/)",
-            settings.data_csv_path,
-        )
+        logger.error("%s — place Mall_Customers.csv in ./data/", e)
         raise
     except Exception:
         logger.exception("Pipeline failed")
         raise
 
-    n_anom = int(results_df["Is_Anomaly"].sum())
-    logger.info("Pipeline complete. Flagged anomalies: %d", n_anom)
-    logger.info("Saved anomalies CSV: %s", settings.anomalies_csv_path)
-    logger.info("Saved plot: %s", settings.plots_dir / "clusters_anomalies.png")
+    logger.info("Done. Anomalies flagged: %d | CSV: %s | Plot: %s",
+                int(results_df["Is_Anomaly"].sum()),
+                settings.anomalies_csv_path,
+                settings.plots_dir / "clusters_anomalies.png")
 
 
 if __name__ == "__main__":
