@@ -164,11 +164,11 @@ def try_generate_insights(
     )
 
     try:
-        resp = client.responses.create(
+        resp = client.chat.completions.create(
             model=settings.model_name,
-            input=prompt,
+            messages=[{"role": "user", "content": prompt}],
         )
-        text = getattr(resp, "output_text", None) or str(resp)
+        text = resp.choices[0].message.content
     except Exception:
         logger.error("Insight generation failed. Continuing without insights.")
         return None
